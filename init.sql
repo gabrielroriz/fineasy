@@ -12,7 +12,7 @@ CREATE TABLE wallet(
     title varchar(30) not null
 );
 
-CREATE category(
+CREATE TABLE category(
     id serial primary key,
     title varchar(30) not null
 );
