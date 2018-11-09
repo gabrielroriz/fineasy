@@ -22,7 +22,7 @@ CREATE TABLE flow (
     flux fluxType not null,
     cash numeric(8, 2) not null,
     source references source(id) not null,
-    dest references pocket(id) not null,
+    dest references wallet(id) not null,
     category references category(id) not null,
     createdAt date not null
 );
