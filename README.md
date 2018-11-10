@@ -18,5 +18,5 @@ CLI-fineasy is a command-line-interface software to manage cash flow using **Go*
 
 ## Database scheme
 
-
+![alt text](https://github.com/gabrielroriz/cli-fineasy/blob/master/schema/db-schema.png)
 
