@@ -6,5 +6,5 @@ import (
 
 type Category struct {
 	gorm.Model
-	Title string `gorm:"type:varchar(30);not null"`
+	Title string `sql:"not null; unique; type: varchar(30);"`
 }

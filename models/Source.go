@@ -6,6 +6,6 @@ import (
 
 type Source struct {
 	gorm.Model
-	Title string `gorm:"type:varchar(30);not null"`
-	Flux  string `gorm:"not null; type:fluxType"`
+	Title string `sql:"not null; type: varchar(30);"`
+	Flux  string `sql:"not null; type: fluxType;"`
 }

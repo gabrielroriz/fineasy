@@ -30,8 +30,23 @@ func main() {
 		&models.Category{},
 		&models.Flow{})
 
-	// // Create
-	// db.Create(&Product{Code: "L1212", Price: 1000})
+	// Create
+
+	// db.Create(&models.Category{Title: "ENTRETENIMENTO"})
+	// db.Create(&models.Wallet{Title: "BB"})
+	// db.Create(&models.Source{Title: "Café RA", Flux: "expense"})
+
+	db.Create(&models.Flow{
+		Cash:       1500,
+		SourceID:   1,
+		WalletID:   1,
+		CategoryID: 1,
+		Flux:       "expense"})
+
+	// db.Create()
+
+	// db.Create(&models.Category{Title: "ENTRETENIMENTO"})
+	// db.Create(&models.Category{Title: "CONTAS REPSOL"})
 
 	// // Read
 	// var product Product
