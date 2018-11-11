@@ -11,7 +11,7 @@ import (
 
 var db *gorm.DB
 
-func InitDB() {
+func InitDB() *gorm.DB {
 
 	var err error
 
@@ -33,4 +33,6 @@ func InitDB() {
 		&models.Wallet{},
 		&models.Category{},
 		&models.Flow{})
+
+	return db
 }

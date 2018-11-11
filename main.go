@@ -1,7 +1,7 @@
 package main
 
 import (
-	"os"
+	"fmt"
 
 	db "github.com/gabrielroriz/cli-fineasy/database"
 	"github.com/gabrielroriz/cli-fineasy/handlers"
@@ -9,16 +9,21 @@ import (
 
 func main() {
 
-	db.InitDB()
+	db := db.InitDB()
+	defer db.Close()
 
-	args := os.Args[1:]
+	command := ""
+	for command != "\\q" {
 
-	if len(args) != 0 && args[0] != "" {
-		switch args[0] {
-		case "-lf":
+		fmt.Print("fineasy>")
+		fmt.Scanf("%s", &command)
+
+		switch command {
+		case "lf":
 			handlers.ListFlows()
 		default:
 
 		}
+
 	}
 }
