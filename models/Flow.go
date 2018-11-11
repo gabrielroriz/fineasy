@@ -12,7 +12,7 @@ type Flow struct {
 	WalletID   uint    `sql:"type:int REFERENCES wallets(id)"`
 	CategoryID uint    `sql:"type:int REFERENCES categories(id)"`
 
-	Source   Source   `gorm:"foreignkey:SourceID"`
-	Wallet   Wallet   `gorm:"foreignkey:WalletID"`
-	Category Category `gorm:"foreignkey:CategoryID"`
+	Source   Source   `gorm:"foreignkey:SourceID;"`
+	Wallet   Wallet   `gorm:"foreignkey:WalletID;"`
+	Category Category `gorm:"foreignkey:CategoryID;"`
 }

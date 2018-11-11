@@ -2,7 +2,7 @@
 
 CREATE DATABASE fineasy;
 
-CREATE TYPE fluxType enum('expense', 'income');
+CREATE TYPE fluxType AS enum('expense', 'income');
 
 
 
