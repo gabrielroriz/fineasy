@@ -3,14 +3,24 @@ package main
 import (
 	"fmt"
 
-	db "github.com/gabrielroriz/cli-fineasy/database"
+	"github.com/gabrielroriz/cli-fineasy/database"
 	"github.com/gabrielroriz/cli-fineasy/handlers"
 )
 
 func main() {
 
-	db := db.InitDB()
-	defer db.Close()
+	var db *database.DBConfig
+	var err error
+
+	for db == nil {
+		db, err = database.InitDB()
+		if err != nil {
+			fmt.Println(err)
+			database.SetDBConfig(handlers.ConfigDB())
+		} else {
+			defer db.DB.Close()
+		}
+	}
 
 	command := ""
 	for command != "\\q" {
