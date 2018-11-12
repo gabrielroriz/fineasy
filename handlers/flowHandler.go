@@ -6,7 +6,7 @@ import (
 	db "github.com/gabrielroriz/cli-fineasy/database"
 )
 
-func ListFlows() bool {
+func ListFlows() {
 
 	values := db.GetFlows()
 
@@ -38,7 +38,6 @@ func ListFlows() bool {
 	fmt.Printf("--------------------------------------------------------------------------------------------------------------------------------\n")
 	fmt.Printf("                                                                                                        | %-*s |\n", 20, fmt.Sprintf("R$ %.2f", total))
 	fmt.Printf("--------------------------------------------------------------------------------------------------------------------------------\n\n")
-	return true
 }
 
 // db.Create(&models.Category{Title: "ENTRETENIMENTO"})

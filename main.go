@@ -31,6 +31,16 @@ func main() {
 		switch command {
 		case "lf":
 			handlers.ListFlows()
+
+		case "lc":
+			handlers.ListCategories()
+
+		case "lw":
+			handlers.ListWallets()
+
+		case "ls":
+			handlers.ListSources()
+
 		default:
 
 		}
