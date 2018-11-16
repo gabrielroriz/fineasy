@@ -12,7 +12,7 @@ type Source struct {
 
 func GetSources() *[]Source {
 
-	if values, ok := (*db).DB.
+	if values, ok := (*dbConfig).DB.
 		Find(&[]Source{}).
 		Value.(*[]Source); ok {
 

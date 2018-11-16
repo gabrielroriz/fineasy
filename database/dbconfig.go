@@ -11,26 +11,28 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//constants
+var configPath = os.Getenv("HOME") + "/.fineasy"
+var configFilePath = configPath + "/database.conf"
+
+var dbConfig *DBConfig
+
 type DBConfig struct {
 	Host     string
 	Port     string
+	Database string
 	User     string
 	Password string
 
 	DB *gorm.DB
 }
 
-var configPath = os.Getenv("HOME") + "/.fineasy"
-var configFilePath = configPath + "/database.conf"
-
-var db *DBConfig
-
 func createConfigFolder() {
 	os.Mkdir(configPath, 0777)
 }
 
-func SetDBConfig(dbConfig *DBConfig) {
-	db = dbConfig
+func SetDBConfig(new *DBConfig) {
+	dbConfig = new
 	writeDBConfig()
 }
 
@@ -38,7 +40,7 @@ func writeDBConfig() error {
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		createConfigFolder()
 	}
-	content := []byte(fmt.Sprintf("host=%s\nport=%s\nuser=%s\npassword=%s", (*db).Host, (*db).Port, (*db).User, (*db).Password))
+	content := []byte(fmt.Sprintf("host=%s\nport=%s\ndatabase=%s\nuser=%s\npassword=%s", (*dbConfig).Host, (*dbConfig).Port, (*dbConfig).Database, (*dbConfig).User, (*dbConfig).Password))
 
 	err := ioutil.WriteFile(configFilePath, content, 0777)
 
@@ -61,14 +63,39 @@ func readDBConfig() error {
 
 			data := strings.Split(string(b), "\n")
 
-			dbConfig := DBConfig{
-				Host:     strings.Split(data[0], "=")[1],
-				Port:     strings.Split(data[1], "=")[1],
-				User:     strings.Split(data[2], "=")[1],
-				Password: strings.Split(data[3], "=")[1],
+			statements := make(map[string]string)
+
+			for _, line := range data {
+
+				//remove outside spaces and \t's
+				line = strings.TrimSpace(strings.Replace(line, "\t", "", -1))
+
+				if line == "" || line[0] == ';' || line[0] == '#' {
+					continue
+				}
+
+				//at that moment statement[0] is key, statement[1] is value
+				statement := strings.Split(line, "=")
+
+				for i := 0; i < len(statement); i++ {
+					//remove outside spaces to key and value
+					statement[i] = strings.TrimSpace(statement[i])
+				}
+
+				//add to map
+				statements[statement[0]] = statement[1]
+
 			}
 
-			db = &dbConfig
+			config := DBConfig{
+				Host:     statements["host"],
+				Port:     statements["port"],
+				Database: statements["database"],
+				User:     statements["user"],
+				Password: statements["password"],
+			}
+
+			dbConfig = &config
 			//file exists
 			return nil
 		} else {

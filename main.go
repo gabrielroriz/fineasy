@@ -25,7 +25,7 @@ func main() {
 	command := ""
 	for command != "\\q" {
 
-		fmt.Print("fineasy>")
+		fmt.Print("fineasy> ")
 		fmt.Scanf("%s", &command)
 
 		switch command {

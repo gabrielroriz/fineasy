@@ -11,7 +11,7 @@ type Category struct {
 
 func GetCategories() *[]Category {
 
-	if values, ok := (*db).DB.
+	if values, ok := (*dbConfig).DB.
 		Find(&[]Category{}).
 		Value.(*[]Category); ok {
 

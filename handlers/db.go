@@ -8,19 +8,22 @@ import (
 
 func InsertDBConfig() *database.DBConfig {
 
-	dbConfig := &database.DBConfig{}
+	dbConfig := database.DBConfig{}
 
-	fmt.Printf("host=")
-	fmt.Scanf("%s", &((*dbConfig).Host))
+	fmt.Printf("host: ")
+	fmt.Scanf("%s", &(dbConfig.Host))
 
-	fmt.Printf("port=")
-	fmt.Scanf("%s", &((*dbConfig).Port))
+	fmt.Printf("port: ")
+	fmt.Scanf("%s", &(dbConfig.Port))
 
-	fmt.Printf("user=")
-	fmt.Scanf("%s", &((*dbConfig).User))
+	fmt.Printf("database: ")
+	fmt.Scanf("%s", &(dbConfig.Database))
 
-	fmt.Printf("password=")
-	fmt.Scanf("%s", &((*dbConfig).Password))
+	fmt.Printf("username: ")
+	fmt.Scanf("%s", &(dbConfig.User))
 
-	return dbConfig
+	fmt.Printf("password: ")
+	fmt.Scanf("%s", &(dbConfig.Password))
+
+	return &dbConfig
 }

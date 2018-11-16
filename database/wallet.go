@@ -11,7 +11,7 @@ type Wallet struct {
 
 func GetWallets() *[]Wallet {
 
-	if values, ok := (*db).DB.
+	if values, ok := (*dbConfig).DB.
 		Find(&[]Wallet{}).
 		Value.(*[]Wallet); ok {
 

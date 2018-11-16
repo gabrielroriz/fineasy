@@ -20,7 +20,7 @@ type Flow struct {
 //GetFlows : Get all flow tuples
 func GetFlows() *[]Flow {
 
-	if values, ok := (*db).DB.
+	if values, ok := (*dbConfig).DB.
 		Preload("Source").
 		Preload("Category").
 		Preload("Wallet").
