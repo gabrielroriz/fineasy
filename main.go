@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/gabrielroriz/cli-fineasy/database"
-	"github.com/gabrielroriz/cli-fineasy/handlers"
+	"github.com/gabrielroriz/fineasy/database"
+	"github.com/gabrielroriz/fineasy/handlers"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 		db, err = database.InitDB()
 		if err != nil {
 			fmt.Println(err)
-			database.SetDBConfig(handlers.ConfigDB())
+			database.SetDBConfig(handlers.InsertDBConfig())
 		} else {
 			defer db.DB.Close()
 		}

@@ -1,4 +1,4 @@
-package models
+package database
 
 import (
 	"github.com/jinzhu/gorm"
@@ -15,4 +15,20 @@ type Flow struct {
 	Source   Source   `gorm:"foreignkey:SourceID;"`
 	Wallet   Wallet   `gorm:"foreignkey:WalletID;"`
 	Category Category `gorm:"foreignkey:CategoryID;"`
+}
+
+//GetFlows : Get all flow tuples
+func GetFlows() *[]Flow {
+
+	if values, ok := (*db).DB.
+		Preload("Source").
+		Preload("Category").
+		Preload("Wallet").
+		Find(&[]Flow{}).
+		Value.(*[]Flow); ok {
+
+		return values
+	}
+
+	return nil
 }

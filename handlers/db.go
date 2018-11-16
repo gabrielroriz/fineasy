@@ -3,12 +3,12 @@ package handlers
 import (
 	"fmt"
 
-	db "github.com/gabrielroriz/cli-fineasy/database"
+	"github.com/gabrielroriz/fineasy/database"
 )
 
-func ConfigDB() *db.DBConfig {
+func InsertDBConfig() *database.DBConfig {
 
-	dbConfig := &db.DBConfig{}
+	dbConfig := &database.DBConfig{}
 
 	fmt.Printf("host=")
 	fmt.Scanf("%s", &((*dbConfig).Host))
