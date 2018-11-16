@@ -20,3 +20,12 @@ func GetWallets() *[]Wallet {
 
 	return nil
 }
+
+func InsertWallet(wallet *Wallet) error {
+
+	if err := (*dbConfig).DB.Create(wallet).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

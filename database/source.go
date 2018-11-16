@@ -21,3 +21,12 @@ func GetSources() *[]Source {
 
 	return nil
 }
+
+func InsertSource(source *Source) error {
+
+	if err := (*dbConfig).DB.Create(source).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

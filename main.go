@@ -25,10 +25,12 @@ func main() {
 	command := ""
 	for command != "\\q" {
 
-		fmt.Print("fineasy> ")
+		fmt.Print("\nfineasy> ")
 		fmt.Scanf("%s", &command)
 
 		switch command {
+
+		//lists
 		case "lf":
 			handlers.ListFlows()
 
@@ -40,6 +42,19 @@ func main() {
 
 		case "ls":
 			handlers.ListSources()
+
+		//insertions
+		case "if":
+			handlers.InsertFlow()
+
+		case "ic":
+			handlers.InsertCategory()
+
+		case "iw":
+			handlers.InsertWallet()
+
+		case "is":
+			handlers.InsertSource()
 
 		default:
 

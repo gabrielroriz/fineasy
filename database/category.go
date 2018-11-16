@@ -20,3 +20,12 @@ func GetCategories() *[]Category {
 
 	return nil
 }
+
+func InsertCategory(category *Category) error {
+
+	if err := (*dbConfig).DB.Create(category).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
