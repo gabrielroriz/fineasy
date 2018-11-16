@@ -10,7 +10,7 @@ Fineasy is a command-line-interface software to manage cash flow using **Go** wi
 
   By default, this command will list all flows from current month and year.
 
-    fin -lf -m=<month> -y=<year>
+    fin -lf
     
   ### List  Categories
     fin -lc
