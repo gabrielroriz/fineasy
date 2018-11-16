@@ -1,31 +1,18 @@
 
-# CLI-fineasy
+# fineasy
 
   
-CLI-fineasy is a command-line-interface software to manage cash flow using **Go** with **PostgreSQL**.
-  
-
-## Setup Environment
-
-
-1. Execute this Queries in your PostgreSQL:
-
-
-CREATE DATABASE fineasy;
-
-
-CREATE TYPE fluxType as enum('expense', 'income');
-  
-
+Fineasy is a command-line-interface software to manage cash flow using **Go** with **PostgreSQL**.
+    
 ## Commands
 
-### List  Flows
+  ### List  Flows
 
-By default, this command will list all flows from current month and year.
+  By default, this command will list all flows from current month and year.
 
     fin -lf -m=<month> -y=<year>
     
-### List  Categories
+  ### List  Categories
     fin -lc
     
   ### List  Sources
