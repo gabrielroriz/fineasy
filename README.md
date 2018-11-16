@@ -2,7 +2,7 @@
 # fineasy
 
   
-Fineasy is a command-line-interface software to manage cash flow using **Go** with **PostgreSQL**.
+Fineasy is a command-line-interface software to manage cash flow using **Go** with **PostgreSQL** database.
     
 ## Commands
 
