@@ -23,7 +23,7 @@ func PrintTable(keys []string, values [][]string) {
 		row := values[line]
 		for column := 0; column < len(row); column++ {
 			if sizes[column] < len(row[column]) {
-				sizes[column] = len(row[column]) + 3
+				sizes[column] = len(row[column]) + 2
 			}
 
 		}
@@ -31,7 +31,15 @@ func PrintTable(keys []string, values [][]string) {
 
 	var totalSize int
 	for i := 0; i < len(sizes); i++ {
+
+		//in order to centeralize column title
+		diff := sizes[i] - len(keys[i])
+		if diff%2 != 0 {
+			sizes[i]++
+		}
+
 		totalSize += sizes[i]
+
 	}
 
 	totalSize += len(keys) + 1
@@ -48,7 +56,9 @@ func PrintTable(keys []string, values [][]string) {
 			fmt.Print("|")
 		}
 
-		fmt.Print(fmt.Sprintf("\033[1m%-*s\033[0m|", sizes[i], keys[i]))
+		emptySpace := strings.Repeat(" ", (sizes[i]-len(keys[i]))/2)
+
+		fmt.Print(fmt.Sprintf("\033[1m%s%s%s\033[0m|", emptySpace, keys[i], emptySpace))
 
 		if i == len(keys)-1 {
 			fmt.Print("\n")
@@ -73,6 +83,4 @@ func PrintTable(keys []string, values [][]string) {
 	}
 
 	fmt.Println(normalLine)
-
-	// fmt.Println(sizes)
 }
