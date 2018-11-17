@@ -87,17 +87,17 @@ func ListCategories() {
 
 	values := database.GetCategories()
 
-	fmt.Printf("------------------------------------\n")
-	fmt.Printf(" %-10s | %-20s |\n", "id", "title")
-	fmt.Printf("------------------------------------\n")
+	var categories [][]string
+
 	for i := 0; i < len(*values); i++ {
 
 		model := (*values)[i]
 
-		fmt.Printf(" %-*s | %-*s |\n",
-			10, fmt.Sprint(model.ID),
-			20, model.Title)
+		category := []string{fmt.Sprintf("%d", model.ID), model.Title}
+
+		categories = append(categories, category)
 	}
-	fmt.Printf("------------------------------------\n")
+
+	PrintTable([]string{"id", "title"}, categories)
 
 }

@@ -56,10 +56,6 @@ func main() {
 		case "is":
 			handlers.InsertSource()
 
-		case "teste":
-			values := [][]string{{"aaaaaaaaaaa", "bbbbb", "c"}, {"a", "b", "cccccccccc"}}
-			handlers.PrintTable([]string{"a", "b", "cadaver"}, values)
-
 		default:
 
 		}
