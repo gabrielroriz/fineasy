@@ -11,18 +11,18 @@ func ListWallets() {
 
 	values := database.GetWallets()
 
-	fmt.Printf("------------------------------------\n")
-	fmt.Printf(" %-10s | %-20s |\n", "id", "title")
-	fmt.Printf("------------------------------------\n")
+	var wallets [][]string
+
 	for i := 0; i < len(*values); i++ {
 
 		model := (*values)[i]
 
-		fmt.Printf(" %-*s | %-*s |\n",
-			10, fmt.Sprint(model.ID),
-			20, model.Title)
+		wallet := []string{fmt.Sprintf("%d", model.ID), model.Title}
+
+		wallets = append(wallets, wallet)
 	}
-	fmt.Printf("------------------------------------\n")
+
+	PrintTable([]string{"id", "title"}, wallets)
 
 }
 
@@ -31,19 +31,18 @@ func ListSources() {
 
 	values := database.GetSources()
 
-	fmt.Printf("-----------------------------------------------------------\n")
-	fmt.Printf(" %-10s | %-20s | %-20s |\n", "id", "title", "flux")
-	fmt.Printf("-----------------------------------------------------------\n")
+	var sources [][]string
+
 	for i := 0; i < len(*values); i++ {
 
 		model := (*values)[i]
 
-		fmt.Printf(" %-*s | %-*s | %-*s |\n",
-			10, fmt.Sprint(model.ID),
-			20, model.Title,
-			20, model.Flux)
+		source := []string{fmt.Sprintf("%d", model.ID), model.Title, model.Flux}
+
+		sources = append(sources, source)
 	}
-	fmt.Printf("-----------------------------------------------------------\n")
+
+	PrintTable([]string{"id", "title", "flux"}, sources)
 
 }
 
