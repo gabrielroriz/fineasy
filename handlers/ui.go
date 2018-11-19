@@ -35,7 +35,7 @@ func PrintTable(keys []string, values [][]string) {
 	var totalSize int
 	for i := 0; i < len(sizes); i++ {
 
-		//in order to centeralize column title
+		//to centeralize column title
 		diff := sizes[i] - len(keys[i])
 		if diff%2 != 0 {
 			sizes[i]++

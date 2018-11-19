@@ -80,34 +80,138 @@ func InsertCategory() {
 
 func InsertFlow() {
 
-	// values := database.GetFlows()
+	categories := database.GetCategories()
+	wallets := database.GetWallets()
+	sources := database.GetSources()
 
-	// var total float32
+	var categoryId uint
 
-	// fmt.Printf("--------------------------------------------------------------------------------------------------------------------------------\n")
-	// fmt.Printf(" %-10s | %-20s | %-20s | %-20s | %-20s | %-20s |\n", "id", "date", "source", "category", "wallet", "cash")
-	// fmt.Printf("--------------------------------------------------------------------------------------------------------------------------------\n")
-	// for i := 0; i < len(*values); i++ {
+	var answer string
 
-	// 	model := (*values)[i]
+	for answer != "Y" {
+		if categoryId > 0 {
+			PrintBold("\033[1A\033[KWhat is category id? ")
+		} else {
+			PrintBold("\033[KWhat is category id? ")
+		}
 
-	// 	total += model.Cash
+		fmt.Scanf("%d", &categoryId)
 
-	// 	date := fmt.Sprintf("%d/%d/%d", model.CreatedAt.Day(), model.CreatedAt.Month(), model.CreatedAt.Year())
-	// 	source := fmt.Sprintf("(%d) %s", model.Source.ID, model.Source.Title)
-	// 	category := fmt.Sprintf("(%d) %s", model.Category.ID, model.Category.Title)
-	// 	wallet := fmt.Sprintf("(%d) %s", model.Wallet.ID, model.Wallet.Title)
-	// 	cash := fmt.Sprintf("R$ %.2f", model.Cash)
+		var model database.Category
 
-	// 	fmt.Printf(" %-*s | %-*s | %-*s | %-*s | %-*s | %-*s |\n",
-	// 		10, fmt.Sprint(model.ID),
-	// 		20, date,
-	// 		20, source,
-	// 		20, category,
-	// 		20, wallet,
-	// 		20, cash)
-	// }
-	// fmt.Printf("--------------------------------------------------------------------------------------------------------------------------------\n")
-	// fmt.Printf("                                                                                                        | %-*s |\n", 20, fmt.Sprintf("R$ %.2f", total))
-	// fmt.Printf("--------------------------------------------------------------------------------------------------------------------------------\n\n")
+		for i := 0; i < len(*categories); i++ {
+
+			model = (*categories)[i]
+
+			if model.ID == categoryId {
+				fmt.Printf("\033[1A\033[KConfirm that is \033[1mCategory (%d) %s\033[0m? Type Y or N: ", model.ID, model.Title)
+				fmt.Scanf("%s", &answer)
+				break
+			}
+		}
+
+		if answer == "Y" {
+			fmt.Printf("\033[1A\033[KCategory: \033[1m(%d) %s.\033[0m", model.ID, model.Title)
+		}
+
+	}
+
+	answer = ""
+	var walletId uint
+
+	for answer != "Y" {
+		if walletId > 0 {
+			PrintBold("\033[1A\033[KWhat is wallet id? ")
+		} else {
+			PrintBold("\nWhat is wallet id? ")
+		}
+
+		fmt.Scanf("%d", &walletId)
+
+		var model database.Wallet
+
+		for i := 0; i < len(*wallets); i++ {
+
+			model = (*wallets)[i]
+
+			if model.ID == walletId {
+
+				fmt.Printf("\033[1A\033[KConfirm that is \033[1mWallet (%d) %s\033[0m? Type Y or N: ", model.ID, model.Title)
+				fmt.Scanf("%s", &answer)
+				break
+			}
+		}
+
+		if answer == "Y" {
+			fmt.Printf("\033[1A\033[KWallet: \033[1m(%d) %s.\033[0m", model.ID, model.Title)
+		}
+
+	}
+
+	answer = ""
+	var sourceId uint
+
+	for answer != "Y" {
+		if sourceId > 0 {
+			PrintBold("\033[1A\033[KWhat is source id? ")
+		} else {
+			PrintBold("\nWhat is source id? ")
+		}
+
+		fmt.Scanf("%d", &sourceId)
+
+		var model database.Source
+
+		for i := 0; i < len(*sources); i++ {
+
+			model = (*sources)[i]
+
+			if model.ID == sourceId {
+
+				fmt.Printf("\033[1A\033[KConfirm that is Source \033[1m(%d) %s (%s)\033[0m? Type Y or N: ", model.ID, model.Title, model.Flux)
+				fmt.Scanf("%s", &answer)
+				break
+			}
+		}
+
+		if answer == "Y" {
+			fmt.Printf("\033[1A\033[KSource: \033[1m(%d) %s (%s).\033[0m", model.ID, model.Title, model.Flux)
+		}
+	}
+
+	//description
+	reader := bufio.NewReader(os.Stdin)
+
+	PrintBold("\nWhat is the description? ")
+	text, _ := reader.ReadString('\n')
+
+	description := strings.Split(text, "\n")[0]
+	fmt.Printf("\033[1A\033[KDescription: \033[1m%s.\033[0m", description)
+
+	//cash
+	var cash float32
+
+	PrintBold("\nHow much money? ")
+	fmt.Scanf("%f", &cash)
+	fmt.Printf("\033[1A\033[KCash: \033[1m%.2f.\033[0m", cash)
+
+	fmt.Printf("\n\nConfirm flow insertion? Y or N: ")
+	fmt.Scanf("%s", &answer)
+
+	if answer == "Y" {
+
+		if err := database.InsertFlow(
+			&database.Flow{
+				CategoryID:  categoryId,
+				WalletID:    walletId,
+				SourceID:    sourceId,
+				Description: description,
+				Cash:        cash,
+			}); err != nil {
+			fmt.Println(err)
+		} else {
+			PrintSuccess("\nNew flow added successfuly.\n")
+		}
+	}
+
 }

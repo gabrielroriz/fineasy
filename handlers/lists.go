@@ -60,15 +60,17 @@ func ListFlows() {
 		id := fmt.Sprintf("%d", model.ID)
 		date := fmt.Sprintf("%d/%d/%d", model.CreatedAt.Day(), model.CreatedAt.Month(), model.CreatedAt.Year())
 		source := fmt.Sprintf("(%d) %s", model.Source.ID, model.Source.Title)
+		flux := fmt.Sprintf("%s", model.Source.Flux)
+		description := fmt.Sprintf("%s", model.Description)
 		category := fmt.Sprintf("(%d) %s", model.Category.ID, model.Category.Title)
 		wallet := fmt.Sprintf("(%d) %s", model.Wallet.ID, model.Wallet.Title)
 		cash := fmt.Sprintf("R$ %.2f", model.Cash)
 
-		flow := []string{id, date, source, category, wallet, cash}
+		flow := []string{id, date, source, flux, description, category, wallet, cash}
 		flows = append(flows, flow)
 	}
 
-	PrintTable([]string{"id", "date", "source", "category", "wallet", "cash"}, flows)
+	PrintTable([]string{"id", "date", "source", "flux", "description", "category", "wallet", "cash"}, flows)
 
 }
 
