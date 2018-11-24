@@ -80,118 +80,25 @@ func InsertCategory() {
 
 func InsertFlow() {
 
-	categories := database.GetCategories()
-	wallets := database.GetWallets()
-	sources := database.GetSources()
-
-	var categoryId uint
+	category := selectModel(database.ConvertToModels(database.GetCategories())).(database.Category)
+	wallet := selectModel(database.ConvertToModels(database.GetWallets())).(database.Wallet)
+	source := selectModel(database.ConvertToModels(database.GetSources())).(database.Source)
 
 	var answer string
-
-	for answer != "Y" {
-		if categoryId > 0 {
-			PrintBold("\033[1A\033[KWhat is category id? ")
-		} else {
-			PrintBold("\033[KWhat is category id? ")
-		}
-
-		fmt.Scanf("%d", &categoryId)
-
-		var model database.Category
-
-		for i := 0; i < len(*categories); i++ {
-
-			model = (*categories)[i]
-
-			if model.ID == categoryId {
-				fmt.Printf("\033[1A\033[KConfirm that is \033[1mCategory (%d) %s\033[0m? Type Y or N: ", model.ID, model.Title)
-				fmt.Scanf("%s", &answer)
-				break
-			}
-		}
-
-		if answer == "Y" {
-			fmt.Printf("\033[1A\033[KCategory: \033[1m(%d) %s.\033[0m", model.ID, model.Title)
-		}
-
-	}
-
-	answer = ""
-	var walletId uint
-
-	for answer != "Y" {
-		if walletId > 0 {
-			PrintBold("\033[1A\033[KWhat is wallet id? ")
-		} else {
-			PrintBold("\nWhat is wallet id? ")
-		}
-
-		fmt.Scanf("%d", &walletId)
-
-		var model database.Wallet
-
-		for i := 0; i < len(*wallets); i++ {
-
-			model = (*wallets)[i]
-
-			if model.ID == walletId {
-
-				fmt.Printf("\033[1A\033[KConfirm that is \033[1mWallet (%d) %s\033[0m? Type Y or N: ", model.ID, model.Title)
-				fmt.Scanf("%s", &answer)
-				break
-			}
-		}
-
-		if answer == "Y" {
-			fmt.Printf("\033[1A\033[KWallet: \033[1m(%d) %s.\033[0m", model.ID, model.Title)
-		}
-
-	}
-
-	answer = ""
-	var sourceId uint
-
-	for answer != "Y" {
-		if sourceId > 0 {
-			PrintBold("\033[1A\033[KWhat is source id? ")
-		} else {
-			PrintBold("\nWhat is source id? ")
-		}
-
-		fmt.Scanf("%d", &sourceId)
-
-		var model database.Source
-
-		for i := 0; i < len(*sources); i++ {
-
-			model = (*sources)[i]
-
-			if model.ID == sourceId {
-
-				fmt.Printf("\033[1A\033[KConfirm that is Source \033[1m(%d) %s (%s)\033[0m? Type Y or N: ", model.ID, model.Title, model.Flux)
-				fmt.Scanf("%s", &answer)
-				break
-			}
-		}
-
-		if answer == "Y" {
-			fmt.Printf("\033[1A\033[KSource: \033[1m(%d) %s (%s).\033[0m", model.ID, model.Title, model.Flux)
-		}
-	}
 
 	//description
 	reader := bufio.NewReader(os.Stdin)
 
-	PrintBold("\nWhat is the description? ")
+	PrintBold("What is the description? ")
 	text, _ := reader.ReadString('\n')
 
 	description := strings.Split(text, "\n")[0]
-	fmt.Printf("\033[1A\033[KDescription: \033[1m%s.\033[0m", description)
+	fmt.Printf("\033[1A\033[KDescription: \033[1m%s.\033[0m\n", description)
 
 	//cash
 	var cash float32
 
-	PrintBold("\nHow much money? ")
+	PrintBold("How much money? ")
 	fmt.Scanf("%f", &cash)
 	fmt.Printf("\033[1A\033[KCash: \033[1m%.2f.\033[0m", cash)
 
@@ -202,9 +109,9 @@ func InsertFlow() {
 
 		if err := database.InsertFlow(
 			&database.Flow{
-				CategoryID:  categoryId,
-				WalletID:    walletId,
-				SourceID:    sourceId,
+				CategoryID:  category.GetID(),
+				WalletID:    wallet.GetID(),
+				SourceID:    source.GetID(),
 				Description: description,
 				Cash:        cash,
 			}); err != nil {
@@ -213,5 +120,43 @@ func InsertFlow() {
 			PrintSuccess("\nNew flow added successfuly.\n")
 		}
 	}
+}
+
+func selectModel(list []database.Model) database.Model {
+
+	var answer string
+	var id uint
+
+	for answer != "Y" {
+
+		if id > 0 {
+			fmt.Print(MakeBold(fmt.Sprintf("\033[1A\033[KWhat is %s ID? ", list[0].GetTypeInString())))
+		} else {
+			fmt.Print(MakeBold(fmt.Sprintf("\033[KWhat is %s ID? ", list[0].GetTypeInString())))
+		}
+
+		fmt.Scanf("%d", &id)
+
+		var model database.Model
+
+		for i := 0; i < len(list); i++ {
+
+			model = (list)[i]
+
+			if model.GetID() == id {
+				fmt.Printf("\033[1A\033[KConfirm that is %s %s? Type Y or N: ", model.GetTypeInString(), MakeBold(model.ToString()))
+				fmt.Scanf("%s", &answer)
+				break
+			}
+		}
+
+		if answer == "Y" {
+			fmt.Printf("\033[1A\033[K%s: %s.\n", model.GetTypeInString(), MakeBold(model.ToString()))
+			return model
+		}
+
+	}
+
+	return nil
 
 }

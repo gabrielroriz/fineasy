@@ -13,9 +13,9 @@ func ListWallets() {
 
 	var wallets [][]string
 
-	for i := 0; i < len(*values); i++ {
+	for i := 0; i < len(values); i++ {
 
-		model := (*values)[i]
+		model := (values)[i]
 
 		wallet := []string{fmt.Sprintf("%d", model.ID), model.Title}
 
@@ -33,9 +33,9 @@ func ListSources() {
 
 	var sources [][]string
 
-	for i := 0; i < len(*values); i++ {
+	for i := 0; i < len(values); i++ {
 
-		model := (*values)[i]
+		model := (values)[i]
 
 		source := []string{fmt.Sprintf("%d", model.ID), model.Title, model.Flux}
 
@@ -81,9 +81,9 @@ func ListCategories() {
 
 	var categories [][]string
 
-	for i := 0; i < len(*values); i++ {
+	for i := 0; i < len(values); i++ {
 
-		model := (*values)[i]
+		model := (values)[i]
 
 		category := []string{fmt.Sprintf("%d", model.ID), model.Title}
 

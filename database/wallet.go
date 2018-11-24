@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -9,13 +11,25 @@ type Wallet struct {
 	Title string `sql:"not null; type: varchar(30);"`
 }
 
-func GetWallets() *[]Wallet {
+func (w Wallet) ToString() string {
+	return fmt.Sprintf("(%d) %s", w.ID, w.Title)
+}
+
+func (w Wallet) GetID() uint {
+	return w.ID
+}
+
+func (w Wallet) GetTypeInString() string {
+	return "Wallet"
+}
+
+func GetWallets() []Wallet {
 
 	if values, ok := (*dbConfig).DB.
 		Find(&[]Wallet{}).
 		Value.(*[]Wallet); ok {
 
-		return values
+		return *values
 	}
 
 	return nil

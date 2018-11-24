@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -10,13 +12,25 @@ type Source struct {
 	Flux  string `sql:"not null; type: fluxType;"`
 }
 
-func GetSources() *[]Source {
+func (s Source) ToString() string {
+	return fmt.Sprintf("(%d) %s (%s)", s.ID, s.Title, s.Flux)
+}
+
+func (s Source) GetID() uint {
+	return s.ID
+}
+
+func (s Source) GetTypeInString() string {
+	return "Source"
+}
+
+func GetSources() []Source {
 
 	if values, ok := (*dbConfig).DB.
 		Find(&[]Source{}).
 		Value.(*[]Source); ok {
 
-		return values
+		return *values
 	}
 
 	return nil
