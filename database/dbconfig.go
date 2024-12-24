@@ -11,7 +11,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//constants
+// A configuração do database estará em $HOME/.fineasy/database.conf
 var configPath = os.Getenv("HOME") + "/.fineasy"
 var configFilePath = configPath + "/database.conf"
 

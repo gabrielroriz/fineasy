@@ -8,7 +8,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-//InitDB : Init DB
+// InitDB : Init DB
 func InitDB() (*DBConfig, error) {
 
 	var err error

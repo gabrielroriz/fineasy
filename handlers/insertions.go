@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gabrielroriz/fineasy/database"
+	"fineasy/database"
 )
 
 func InsertWallet() {

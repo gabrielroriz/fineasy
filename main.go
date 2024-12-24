@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/gabrielroriz/fineasy/database"
-	"github.com/gabrielroriz/fineasy/handlers"
+	"fineasy/database"
+	"fineasy/handlers"
 )
 
 func main() {

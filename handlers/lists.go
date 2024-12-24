@@ -3,13 +3,17 @@ package handlers
 import (
 	"fmt"
 
-	"github.com/gabrielroriz/fineasy/database"
+	"fineasy/database"
 )
 
 // ListWallets : Shoud have comments here.
 func ListWallets() {
 
 	values := database.GetWallets()
+
+	if len(values) == 0 {
+		return
+	}
 
 	var wallets [][]string
 
@@ -31,6 +35,10 @@ func ListSources() {
 
 	values := database.GetSources()
 
+	if len(values) == 0 {
+		return
+	}
+
 	var sources [][]string
 
 	for i := 0; i < len(values); i++ {
@@ -50,6 +58,10 @@ func ListSources() {
 func ListFlows() {
 
 	values := database.GetFlows()
+
+	if len(*values) == 0 {
+		return
+	}
 
 	var flows [][]string
 
@@ -78,6 +90,10 @@ func ListFlows() {
 func ListCategories() {
 
 	values := database.GetCategories()
+
+	if len(values) == 0 {
+		return
+	}
 
 	var categories [][]string
 

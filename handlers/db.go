@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 
-	"github.com/gabrielroriz/fineasy/database"
+	"fineasy/database"
 )
 
 func InsertDBConfig() *database.DBConfig {
