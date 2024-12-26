@@ -3,8 +3,8 @@ module fineasy
 go 1.23.4
 
 require (
-	github.com/gabrielroriz/fineasy v0.0.0-20181124021116-1405dd029052
 	github.com/jinzhu/gorm v1.9.16
+	golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd
 )
 
 require (
