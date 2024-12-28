@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"fineasy/database"
+	"fineasy/handlers"
 	"fmt"
 	"os"
 	"os/exec"
@@ -9,72 +11,109 @@ import (
 	"golang.org/x/sys/unix"
 )
 
+// Definindo um tipo constante
+type Option string
+
+// Valores possíveis para o tipo Status
+const OptionListFlow = "List Flows"
+const OptionListCategories = "List Categorias"
+const OptionListWallets = "List Wallets"
+const OptionListSources = "List Sources"
+const OptionInsertFlow = "Insert Flow"
+const OptionInsertCategory = "Insert Categoria"
+const OptionInsertWallet = "Insert Wallet"
+const OptionInsertSource = "Insert Source"
+const OptionGoBack = "Go Back"
+
 func main() {
 
-	// var db *database.DBConfig
-	// var err error
+	var db *database.DBConfig
+	var err error
 
-	// for db == nil {
-	// 	db, err = database.InitDB()
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 		database.SetDBConfig(handlers.InsertDBConfig())
-	// 	} else {
-	// 		defer db.DB.Close()
-	// 	}
-	// }
+	for db == nil {
+		db, err = database.InitDB()
+		if err != nil {
+			fmt.Println(err)
+			database.SetDBConfig(handlers.InsertDBConfig())
+		} else {
+			defer db.DB.Close()
+		}
+	}
 
-	// command := ""
+	command := ""
+	for command != "\\q" {
+		fmt.Print("\nfineasy> ")
+		fmt.Scanf("%s", &command)
 
-	// // Stops waiting when user inserts "\q"
-	// for command != "\\q" {
+		switch command {
+		case "opt":
+			commandOptions()
+		}
+	}
+}
 
-	// 	fmt.Print("\nfineasy> ")
-	// 	fmt.Scanf("%s", &command)
+func commandOptions() {
+	allOptions := []string{
+		OptionListFlow,
+		OptionListCategories,
+		OptionListWallets,
+		OptionListSources,
+		OptionInsertFlow,
+		OptionInsertCategory,
+		OptionInsertWallet,
+		OptionInsertSource,
+		OptionGoBack,
+	}
 
-	// 	switch command {
+	selected := *showMenu(allOptions)
 
-	// 	// Lists
-	// 	case "lf":
-	// 		handlers.ListFlows()
+	switch selected {
 
-	// 	case "lc":
-	// 		handlers.ListCategories()
+	// Lists
+	case OptionListFlow:
+		handlers.ListFlows()
 
-	// 	case "lw":
-	// 		handlers.ListWallets()
+	case OptionListCategories:
+		handlers.ListCategories()
 
-	// 	case "ls":
-	// 		handlers.ListSources()
+	case OptionListWallets:
+		handlers.ListWallets()
 
-	// 	// Insertions
-	// 	case "if":
-	// 		handlers.InsertFlow()
+	case OptionListSources:
+		handlers.ListSources()
 
-	// 	case "ic":
-	// 		handlers.InsertCategory()
+	// Insertions
+	case OptionInsertFlow:
+		handlers.InsertFlow()
 
-	// 	case "iw":
-	// 		handlers.InsertWallet()
+	case OptionInsertCategory:
+		handlers.InsertCategory()
 
-	// 	case "is":
-	// 		handlers.InsertSource()
+	case OptionInsertWallet:
+		handlers.InsertWallet()
 
-	// 	default:
+	case OptionInsertSource:
+		handlers.InsertSource()
 
-	// 	}
+	default:
 
-	// }
+	}
+}
 
-	options := []string{"Listar Flows", "Listar Categorias", "Listar Wallets", "Sair"}
+func showMenu(options []string) *string {
+	KeyArrowDown := []byte{27, 91, 66}
+	KeyArrowUp := []byte{27, 91, 65}
+	KeyEnter := []byte{10, 0, 0}
+
 	selected := 0
 
 	// Entrar no modo de entrada de terminal raw
 	oldState, err := makeRaw()
 	if err != nil {
 		fmt.Println("Erro ao configurar o terminal:", err)
-		return
+		return nil
 	}
+
 	defer restoreTerminal(oldState)
 
 	for {
@@ -84,8 +123,10 @@ func main() {
 		// Exibe o menu
 		fmt.Println("Use as setas para navegar e Enter para selecionar:")
 		for i, option := range options {
+			makeBold := "\033[1m"
+			makeGreen := "\033[32m>"
 			if i == selected {
-				fmt.Printf("\033[32m> %s\033[0m\n", option) // Destaca a opção selecionada
+				fmt.Printf("%s%s %s\033[0m\n", makeBold, makeGreen, option) // Destaca a opção selecionada
 			} else {
 				fmt.Printf("  %s\n", option)
 			}
@@ -96,24 +137,27 @@ func main() {
 		_, err := os.Stdin.Read(input)
 		if err != nil {
 			fmt.Println("Erro ao ler entrada:", err)
-			return
+			return nil
 		}
 
-		// fmt.Printf("%d", input[0])
-		// time.Sleep(3 * time.Second)
-
 		// Processa as teclas
-		if bytes.Equal(input, []byte{27, 91, 65}) { // Seta para cima
+		if bytes.Equal(input, KeyArrowUp) { // Seta para cima
 			if selected > 0 {
 				selected--
+			} else if selected == 0 {
+				selected = len(options) - 1
 			}
-		} else if bytes.Equal(input, []byte{27, 91, 66}) { // Seta para baixo
+
+		} else if bytes.Equal(input, KeyArrowDown) { // Seta para baixo
+
 			if selected < len(options)-1 {
 				selected++
+			} else if selected == len(options)-1 {
+				selected = 0
 			}
-		} else if bytes.Equal(input, []byte{10, 0, 0}) { // Enter
-			fmt.Printf("Você selecionou: %s\n", options[selected])
-			return
+
+		} else if bytes.Equal(input, KeyEnter) { // Enter
+			return &options[selected]
 		}
 	}
 }
