@@ -2,6 +2,7 @@ package database
 
 type Model interface {
 	ToString() string
+	ToTableFormat() []string
 	GetID() uint
 	GetTypeInString() string
 }

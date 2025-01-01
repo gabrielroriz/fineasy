@@ -1,34 +1,45 @@
-package handlers
+package utils
 
 import (
 	"fmt"
 	"strings"
 )
 
-func PrintBold(str string) {
+func TerminalUIPrintBold(str string) {
 	fmt.Printf("\033[1m%s\033[0m", str)
 }
 
-func MakeBold(str string) string {
-	return fmt.Sprintf("\033[1m%s\033[0m", str)
+func MakeBold(str string, a ...any) string {
+	return fmt.Sprintf("\033[1m%s\033[0m", fmt.Sprintf(str, a...))
 }
 
-func PrintSuccess(str string) {
+func TerminalUIPrintGreen(str string) {
 	fmt.Printf("\033[32;1m%s\033[0m", str)
 }
 
-func PrintTable(keys []string, values [][]string) {
+func TerminalPrintOnSameLine(str string, a ...any) {
+	fmt.Printf("\033[1A\033[K%s\033[0m", fmt.Sprintf(str, a...))
+}
 
+func TerminalUIPrintTable(keys []string, values [][]string) {
+
+	// Size of each column
 	sizes := make([]int, len(keys))
 
-	//define sizes and give one space before each value
+	// Define sizes and give one space before each value
 	for line := 0; line < len(values); line++ {
-
 		row := values[line]
-		for column := 0; column < len(row); column++ {
 
+		// First reference of column size is key
+		for column := 0; column < len(row); column++ {
+			sizes[column] = len(keys[column])
+		}
+
+		for column := 0; column < len(row); column++ {
+			// Add a space before each value
 			values[line][column] = fmt.Sprintf(" %s", values[line][column])
 
+			// Find largest value
 			if sizes[column] < len(row[column]) {
 				sizes[column] = len(row[column]) + 2
 			}
@@ -37,9 +48,10 @@ func PrintTable(keys []string, values [][]string) {
 	}
 
 	var totalSize int
+
 	for i := 0; i < len(sizes); i++ {
 
-		//to centeralize column title
+		// To centeralize column title
 		diff := sizes[i] - len(keys[i])
 		if diff%2 != 0 {
 			sizes[i]++
@@ -60,6 +72,10 @@ func PrintTable(keys []string, values [][]string) {
 			fmt.Print("│")
 		}
 
+		// fmt.Printf("\nSizes[i]: %d", sizes[i])
+		// fmt.Printf("\nLen(Keys[i]): %d", len(keys[i]))
+		// time.Sleep(time.Second * 3)
+
 		emptySpace := strings.Repeat(" ", (sizes[i]-len(keys[i]))/2)
 
 		fmt.Print(fmt.Sprintf("\033[1m%s%s%s\033[0m│", emptySpace, keys[i], emptySpace))
@@ -69,7 +85,7 @@ func PrintTable(keys []string, values [][]string) {
 		}
 	}
 
-	//draw second strong line
+	// Draw second strong line
 	fmt.Println(drawLine("╞", "═", "╡", '╪', totalSize, sizes))
 
 	for i := 0; i < len(values); i++ {
@@ -87,7 +103,7 @@ func PrintTable(keys []string, values [][]string) {
 
 	}
 
-	//draw last line
+	// Draw last line
 	fmt.Println(drawLine("└", "─", "┘", '┴', totalSize, sizes))
 }
 

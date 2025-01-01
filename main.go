@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"fineasy/database"
 	"fineasy/handlers"
+	"fineasy/utils"
 	"fmt"
 	"os"
-	"os/exec"
-
-	"golang.org/x/sys/unix"
 )
 
 // Definindo um tipo constante
@@ -39,6 +37,9 @@ func main() {
 			defer db.DB.Close()
 		}
 	}
+
+	// Debug Mode:
+	// handlers.InsertFlow()
 
 	command := ""
 	for command != "\\q" {
@@ -108,17 +109,17 @@ func showMenu(options []string) *string {
 	selected := 0
 
 	// Entrar no modo de entrada de terminal raw
-	oldState, err := makeRaw()
+	oldState, err := utils.TerminalModoRaw()
 	if err != nil {
 		fmt.Println("Erro ao configurar o terminal:", err)
 		return nil
 	}
 
-	defer restoreTerminal(oldState)
+	defer utils.TerminalRestore(oldState)
 
 	for {
 		// Limpa a tela
-		clearScreen()
+		utils.TerminalClearScreen()
 
 		// Exibe o menu
 		fmt.Println("Use as setas para navegar e Enter para selecionar:")
@@ -149,7 +150,6 @@ func showMenu(options []string) *string {
 			}
 
 		} else if bytes.Equal(input, KeyArrowDown) { // Seta para baixo
-
 			if selected < len(options)-1 {
 				selected++
 			} else if selected == len(options)-1 {
@@ -160,33 +160,4 @@ func showMenu(options []string) *string {
 			return &options[selected]
 		}
 	}
-}
-
-// Limpa a tela do terminal
-func clearScreen() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	_ = cmd.Run()
-}
-
-// Set Raw Mode on terminal
-// "O modo raw (raw mode) no terminal é um estado em que a entrada do teclado é transmitida diretamente para o programa sem qualquer processamento intermediário"
-func makeRaw() (*unix.Termios, error) {
-	fd := int(os.Stdin.Fd())
-	oldState, err := unix.IoctlGetTermios(fd, unix.TCGETS)
-	if err != nil {
-		return nil, err
-	}
-	newState := *oldState
-	newState.Lflag &^= unix.ICANON | unix.ECHO
-	if err := unix.IoctlSetTermios(fd, unix.TCSETS, &newState); err != nil {
-		return nil, err
-	}
-	return oldState, nil
-}
-
-// Restaura o estado anterior do terminal
-func restoreTerminal(oldState *unix.Termios) {
-	fd := int(os.Stdin.Fd())
-	_ = unix.IoctlSetTermios(fd, unix.TCSETS, oldState)
 }

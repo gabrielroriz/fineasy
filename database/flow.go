@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -18,7 +20,7 @@ type Flow struct {
 	Category Category `gorm:"foreignkey:CategoryID;"`
 }
 
-//GetFlows : Get all flow tuples
+// GetFlows : Get all flow tuples
 func GetFlows() *[]Flow {
 
 	if values, ok := (*dbConfig).DB.
@@ -41,4 +43,27 @@ func InsertFlow(flow *Flow) error {
 	}
 
 	return nil
+}
+
+func (f Flow) ToTableFormat() []string {
+	id := fmt.Sprintf("%d", f.ID)
+	date := fmt.Sprintf("%d/%d/%d", f.CreatedAt.Day(), f.CreatedAt.Month(), f.CreatedAt.Year())
+	source := fmt.Sprintf("(%d) %s", f.Source.ID, f.Source.Title)
+	flux := fmt.Sprintf("%s", f.Source.Flux)
+	description := fmt.Sprintf("%s", f.Description)
+	category := fmt.Sprintf("(%d) %s", f.Category.ID, f.Category.Title)
+	wallet := fmt.Sprintf("(%d) %s", f.Wallet.ID, f.Wallet.Title)
+	cash := fmt.Sprintf("R$ %.2f", f.Cash)
+	return []string{id, date, source, flux, description, category, wallet, cash}
+}
+
+func (f Flow) InMemoryTableFormat() []string {
+
+	categoryId := fmt.Sprintf("%d", f.CategoryID)
+	walletId := fmt.Sprintf("%d", f.WalletID)
+	sourceId := fmt.Sprintf("%d", f.SourceID)
+	description := fmt.Sprintf("%s", f.Description)
+	cash := fmt.Sprintf("R$ %.2f", f.Cash)
+
+	return []string{categoryId, walletId, sourceId, description, cash}
 }

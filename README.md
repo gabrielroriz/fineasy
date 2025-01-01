@@ -6,20 +6,18 @@ Fineasy is a command-line-interface software to manage cash flow using **Go** wi
     
 ## Commands
 
-  ### List  Flows
+  ### Exit
 
-  By default, this command will list all flows from current month and year.
+  Exit...
 
-    fin -lf
+    /q
+
+  ### Show options
+
+  Show options...
+
+    opt
     
-  ### List  Categories
-    fin -lc
-    
-  ### List  Sources
-    fin -lc
-    
-  ### List  Wallets
-    fin -lw
     
 ## Database scheme
 

@@ -23,6 +23,10 @@ func (w Wallet) GetTypeInString() string {
 	return "Wallet"
 }
 
+func (w Wallet) ToTableFormat() []string {
+	return []string{fmt.Sprintf("%d", w.ID), w.Title}
+}
+
 func GetWallets() []Wallet {
 
 	if values, ok := (*dbConfig).DB.

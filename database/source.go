@@ -24,6 +24,10 @@ func (s Source) GetTypeInString() string {
 	return "Source"
 }
 
+func (s Source) ToTableFormat() []string {
+	return []string{fmt.Sprintf("%d", s.ID), s.Title, s.Flux}
+}
+
 func GetSources() []Source {
 
 	if values, ok := (*dbConfig).DB.

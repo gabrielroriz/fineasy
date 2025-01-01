@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"fineasy/database"
+	"fineasy/utils"
 )
 
 func InsertWallet() {
@@ -16,7 +17,7 @@ func InsertWallet() {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("\nYou're creating a new wallet:")
-	PrintBold("What is the title? ")
+	utils.TerminalUIPrintBold("What is the title? ")
 	text, _ := reader.ReadString('\n')
 
 	wallet.Title = strings.Split(text, "\n")[0]
@@ -24,7 +25,7 @@ func InsertWallet() {
 	if err := database.InsertWallet(&wallet); err != nil {
 		fmt.Println(err)
 	} else {
-		PrintSuccess("New wallet added successfuly.\n")
+		utils.TerminalUIPrintGreen("New wallet added successfuly.\n")
 	}
 
 }
@@ -37,11 +38,11 @@ func InsertSource() {
 
 	fmt.Println("\nYou're creating a new source:")
 
-	PrintBold("What is the title? ")
+	utils.TerminalUIPrintBold("What is the title? ")
 	input, _ := reader.ReadString('\n')
 	source.Title = strings.Split(input, "\n")[0]
 
-	PrintBold("Enter [1] 'expense' or [2] 'income': ")
+	utils.TerminalUIPrintBold("Enter [1] 'expense' or [2] 'income': ")
 	fmt.Scanf("%s", &input)
 
 	if input == "1" {
@@ -53,7 +54,7 @@ func InsertSource() {
 	if err := database.InsertSource(&source); err != nil {
 		fmt.Println(err)
 	} else {
-		PrintSuccess("New source added successfuly.\n")
+		utils.TerminalUIPrintGreen("New source added successfuly.\n")
 	}
 
 }
@@ -65,7 +66,7 @@ func InsertCategory() {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("\nYou're creating a new category:")
-	PrintBold("What is the title? ")
+	utils.TerminalUIPrintBold("What is the title? ")
 	text, _ := reader.ReadString('\n')
 
 	category.Title = strings.Split(text, "\n")[0]
@@ -73,51 +74,61 @@ func InsertCategory() {
 	if err := database.InsertCategory(&category); err != nil {
 		fmt.Println(err)
 	} else {
-		PrintSuccess("New category added successfuly.\n")
+		utils.TerminalUIPrintGreen("New category added successfuly.\n")
 	}
 
 }
 
 func InsertFlow() {
-
+	utils.TerminalClearScreen()
+	ListCategories()
 	category := selectModel(database.ConvertToModels(database.GetCategories())).(database.Category)
+
+	utils.TerminalClearScreen()
+	ListWallets()
 	wallet := selectModel(database.ConvertToModels(database.GetWallets())).(database.Wallet)
+
+	utils.TerminalClearScreen()
+	ListSources()
 	source := selectModel(database.ConvertToModels(database.GetSources())).(database.Source)
 
 	var answer string
 
-	//description
+	// Description
+	utils.TerminalClearScreen()
 	reader := bufio.NewReader(os.Stdin)
-
-	PrintBold("What is the description? ")
+	utils.TerminalUIPrintBold("What is the description? ")
 	text, _ := reader.ReadString('\n')
 
 	description := strings.Split(text, "\n")[0]
-	fmt.Printf("\033[1A\033[KDescription: \033[1m%s.\033[0m\n", description)
 
-	//cash
+	// Cash
+	utils.TerminalClearScreen()
 	var cash float32
-
-	PrintBold("How much money? ")
+	utils.TerminalUIPrintBold("How much money? ")
 	fmt.Scanf("%f", &cash)
-	fmt.Printf("\033[1A\033[KCash: \033[1m%.2f.\033[0m", cash)
+
+	// Last Confirmation
+	utils.TerminalClearScreen()
+
+	flow := database.Flow{
+		CategoryID:  category.GetID(),
+		WalletID:    wallet.GetID(),
+		SourceID:    source.GetID(),
+		Description: description,
+		Cash:        cash,
+	}
+
+	utils.TerminalUIPrintTable([]string{"categoryId", "walletId", "sourceId", "description", "cash"}, [][]string{flow.InMemoryTableFormat()})
 
 	fmt.Printf("\n\nConfirm flow insertion? Y or N: ")
 	fmt.Scanf("%s", &answer)
 
 	if answer == "Y" {
-
-		if err := database.InsertFlow(
-			&database.Flow{
-				CategoryID:  category.GetID(),
-				WalletID:    wallet.GetID(),
-				SourceID:    source.GetID(),
-				Description: description,
-				Cash:        cash,
-			}); err != nil {
+		if err := database.InsertFlow(&flow); err != nil {
 			fmt.Println(err)
 		} else {
-			PrintSuccess("\nNew flow added successfuly.\n")
+			utils.TerminalUIPrintGreen("\nNew flow added successfuly.\n")
 		}
 	}
 }
@@ -129,12 +140,7 @@ func selectModel(list []database.Model) database.Model {
 
 	for answer != "Y" {
 
-		if id > 0 {
-			fmt.Print(MakeBold(fmt.Sprintf("\033[1A\033[KWhat is %s ID? ", list[0].GetTypeInString())))
-		} else {
-			fmt.Print(MakeBold(fmt.Sprintf("\033[KWhat is %s ID? ", list[0].GetTypeInString())))
-		}
-
+		fmt.Print(utils.MakeBold("What is %s ID? ", list[0].GetTypeInString()))
 		fmt.Scanf("%d", &id)
 
 		var model database.Model
@@ -144,14 +150,17 @@ func selectModel(list []database.Model) database.Model {
 			model = (list)[i]
 
 			if model.GetID() == id {
-				fmt.Printf("\033[1A\033[KConfirm that is %s %s? Type Y or N: ", model.GetTypeInString(), MakeBold(model.ToString()))
+				utils.TerminalPrintOnSameLine("Confirm that is %s %s? Type Y (enter) or N: ", model.GetTypeInString(), utils.MakeBold(model.ToString()))
 				fmt.Scanf("%s", &answer)
+				if len(answer) == 0 {
+					answer = "Y"
+				}
 				break
 			}
 		}
 
 		if answer == "Y" {
-			fmt.Printf("\033[1A\033[K%s: %s.\n", model.GetTypeInString(), MakeBold(model.ToString()))
+			fmt.Printf("%s: %s.\n", model.GetTypeInString(), utils.MakeBold(model.ToString()))
 			return model
 		}
 

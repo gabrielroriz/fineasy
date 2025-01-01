@@ -23,6 +23,10 @@ func (c Category) GetTypeInString() string {
 	return "Category"
 }
 
+func (c Category) ToTableFormat() []string {
+	return []string{fmt.Sprintf("%d", c.ID), c.Title}
+}
+
 func GetCategories() []Category {
 
 	if values, ok := (*dbConfig).DB.
