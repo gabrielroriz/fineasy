@@ -26,14 +26,14 @@ func TerminalUIPrintTable(keys []string, values [][]string) {
 	// Size of each column
 	sizes := make([]int, len(keys))
 
+	// First reference of column size is key
+	for column := 0; column < len(keys); column++ {
+		sizes[column] = len(keys[column])
+	}
+
 	// Define sizes and give one space before each value
 	for line := 0; line < len(values); line++ {
 		row := values[line]
-
-		// First reference of column size is key
-		for column := 0; column < len(row); column++ {
-			sizes[column] = len(keys[column])
-		}
 
 		for column := 0; column < len(row); column++ {
 			// Add a space before each value
