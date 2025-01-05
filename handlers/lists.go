@@ -19,7 +19,7 @@ func ListWallets() {
 		wallets = append(wallets, model.ToTableFormat())
 	}
 
-	utils.TerminalUIPrintTable([]string{"id", "title"}, wallets)
+	utils.TerminalUIPrintTableModeOnlyView([]string{"id", "title"}, wallets)
 
 }
 
@@ -38,7 +38,7 @@ func ListSources() {
 		sources = append(sources, model.ToTableFormat())
 	}
 
-	utils.TerminalUIPrintTable([]string{"id", "title", "flux"}, sources)
+	utils.TerminalUIPrintTableModeOnlyView([]string{"id", "title", "flux"}, sources)
 
 }
 
@@ -58,7 +58,8 @@ func ListFlows() {
 		flows = append(flows, flow)
 	}
 
-	utils.TerminalUIPrintTable([]string{"id", "date", "source", "flux", "description", "category", "wallet", "cash"}, flows)
+	// utils.TerminalUIPrintTable([]string{"id", "date", "source", "flux", "description", "category", "wallet", "cash"}, flows, true)
+	utils.TerminalUIPrintTableSelectionMode([]string{"id", "date", "source", "flux", "description", "category", "wallet", "cash"}, flows)
 
 }
 
@@ -77,6 +78,6 @@ func ListCategories() {
 		categories = append(categories, model.ToTableFormat())
 	}
 
-	utils.TerminalUIPrintTable([]string{"id", "title"}, categories)
+	utils.TerminalUIPrintTableModeOnlyView([]string{"id", "title"}, categories)
 
 }

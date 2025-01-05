@@ -39,18 +39,18 @@ func main() {
 	}
 
 	// Debug Mode:
-	// handlers.InsertFlow()
+	handlers.ListFlows()
 
-	command := ""
-	for command != "\\q" {
-		fmt.Print("\nfineasy> ")
-		fmt.Scanf("%s", &command)
+	// command := ""
+	// for command != "\\q" {
+	// 	fmt.Print("\nfineasy> ")
+	// 	fmt.Scanf("%s", &command)
 
-		switch command {
-		case "opt":
-			commandOptions()
-		}
-	}
+	// 	switch command {
+	// 	case "opt":
+	// 		commandOptions()
+	// 	}
+	// }
 }
 
 func commandOptions() {
@@ -102,13 +102,13 @@ func commandOptions() {
 }
 
 func showMenu(options []string) *string {
-	KeyArrowDown := []byte{27, 91, 66}
-	KeyArrowUp := []byte{27, 91, 65}
-	KeyEnter := []byte{10, 0, 0}
+	keyArrowDown := []byte{27, 91, 66}
+	keyArrowUp := []byte{27, 91, 65}
+	keyEnter := []byte{10, 0, 0}
 
 	selected := 0
 
-	// Entrar no modo de entrada de terminal raw
+	// Terminal Raw Mode activate
 	oldState, err := utils.TerminalModoRaw()
 	if err != nil {
 		fmt.Println("Erro ao configurar o terminal:", err)
@@ -124,10 +124,10 @@ func showMenu(options []string) *string {
 		// Exibe o menu
 		fmt.Println("Use as setas para navegar e Enter para selecionar:")
 		for i, option := range options {
-			makeBold := "\033[1m"
-			makeGreen := "\033[32m>"
+			boldMark := "\033[1m"
+			greenMark := "\033[32m>"
 			if i == selected {
-				fmt.Printf("%s%s %s\033[0m\n", makeBold, makeGreen, option) // Destaca a opção selecionada
+				fmt.Printf("%s%s %s\033[0m\n", boldMark, greenMark, option) // Destaca a opção selecionada
 			} else {
 				fmt.Printf("  %s\n", option)
 			}
@@ -142,21 +142,21 @@ func showMenu(options []string) *string {
 		}
 
 		// Processa as teclas
-		if bytes.Equal(input, KeyArrowUp) { // Seta para cima
+		if bytes.Equal(input, keyArrowUp) { // Seta para cima
 			if selected > 0 {
 				selected--
 			} else if selected == 0 {
 				selected = len(options) - 1
 			}
 
-		} else if bytes.Equal(input, KeyArrowDown) { // Seta para baixo
+		} else if bytes.Equal(input, keyArrowDown) { // Seta para baixo
 			if selected < len(options)-1 {
 				selected++
 			} else if selected == len(options)-1 {
 				selected = 0
 			}
 
-		} else if bytes.Equal(input, KeyEnter) { // Enter
+		} else if bytes.Equal(input, keyEnter) { // Enter
 			return &options[selected]
 		}
 	}

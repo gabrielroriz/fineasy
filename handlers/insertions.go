@@ -119,7 +119,7 @@ func InsertFlow() {
 		Cash:        cash,
 	}
 
-	utils.TerminalUIPrintTable([]string{"categoryId", "walletId", "sourceId", "description", "cash"}, [][]string{flow.InMemoryTableFormat()})
+	utils.TerminalUIPrintTableModeOnlyView([]string{"categoryId", "walletId", "sourceId", "description", "cash"}, [][]string{flow.InMemoryTableFormat()})
 
 	fmt.Printf("\n\nConfirm flow insertion? Y or N: ")
 	fmt.Scanf("%s", &answer)
