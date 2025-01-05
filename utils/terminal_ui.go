@@ -119,8 +119,9 @@ func printTable(keys []string, values [][]string, selectionMode bool, selected i
 
 		emptySpace := strings.Repeat(" ", (sizes[i]-len(keys[i]))/2)
 
-		fmt.Print(fmt.Sprintf("%s%s%s%s%s", TerminalTextBold, emptySpace, keys[i], emptySpace, TerminalTextColorReset))
+		fmt.Print(fmt.Sprintf("%s%s%s%s%s|", TerminalTextBold, emptySpace, keys[i], emptySpace, TerminalTextColorReset))
 
+		// If it's last key
 		if i == len(keys)-1 {
 			fmt.Print("\n")
 		}
@@ -159,7 +160,13 @@ func TerminalUIPrintTableSelectionMode(keys []string, values [][]string) *string
 	keyEnter := []byte{10, 0, 0}
 
 	selected := 0
-	options := values[0]
+	options := make([]string, len(values))
+
+	// The element at position 0 will always serve as the key.
+	for row, value := range values {
+		rowKey := value[0]
+		options[row] = rowKey
+	}
 
 	// Terminal Raw Mode activate
 	oldState, err := TerminalModoRaw()
@@ -218,7 +225,7 @@ func spaces(count int) string {
 
 func treatLeftMostString(leftmostString string, tab bool, selected bool) string {
 	if tab {
-		tabWidth := 8 // Default tab width
+		tabWidth := 2 // Default tab width
 
 		char := " "
 		if selected {

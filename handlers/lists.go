@@ -5,11 +5,11 @@ import (
 	"fineasy/utils"
 )
 
-func ListWallets() {
+func ListWallets(selectionMode bool) *string {
 	values := database.GetWallets()
 
 	if len(values) == 0 {
-		return
+		return nil
 	}
 
 	var wallets [][]string
@@ -19,16 +19,24 @@ func ListWallets() {
 		wallets = append(wallets, model.ToTableFormat())
 	}
 
-	utils.TerminalUIPrintTableModeOnlyView([]string{"id", "title"}, wallets)
+	tableKeys := []string{"id", "title"}
+	tableValues := wallets
+
+	if selectionMode {
+		return utils.TerminalUIPrintTableSelectionMode(tableKeys, tableValues)
+	} else {
+		utils.TerminalUIPrintTableModeOnlyView(tableKeys, tableValues)
+		return nil
+	}
 
 }
 
-func ListSources() {
+func ListSources(selectionMode bool) *string {
 
 	values := database.GetSources()
 
 	if len(values) == 0 {
-		return
+		return nil
 	}
 
 	var sources [][]string
@@ -38,16 +46,24 @@ func ListSources() {
 		sources = append(sources, model.ToTableFormat())
 	}
 
-	utils.TerminalUIPrintTableModeOnlyView([]string{"id", "title", "flux"}, sources)
+	tableKeys := []string{"id", "title", "flux"}
+	tableValues := sources
+
+	if selectionMode {
+		return utils.TerminalUIPrintTableSelectionMode(tableKeys, tableValues)
+	} else {
+		utils.TerminalUIPrintTableModeOnlyView(tableKeys, tableValues)
+		return nil
+	}
 
 }
 
-func ListFlows() {
+func ListFlows(selectionMode bool) *string {
 
 	values := database.GetFlows()
 
 	if len(*values) == 0 {
-		return
+		return nil
 	}
 
 	var flows [][]string
@@ -58,17 +74,24 @@ func ListFlows() {
 		flows = append(flows, flow)
 	}
 
-	// utils.TerminalUIPrintTable([]string{"id", "date", "source", "flux", "description", "category", "wallet", "cash"}, flows, true)
-	utils.TerminalUIPrintTableSelectionMode([]string{"id", "date", "source", "flux", "description", "category", "wallet", "cash"}, flows)
+	tableKeys := []string{"id", "date", "source", "flux", "description", "category", "wallet", "cash"}
+	tableValues := flows
+
+	if selectionMode {
+		return utils.TerminalUIPrintTableSelectionMode(tableKeys, tableValues)
+	} else {
+		utils.TerminalUIPrintTableModeOnlyView(tableKeys, tableValues)
+		return nil
+	}
 
 }
 
-func ListCategories() {
+func ListCategories(selectionMode bool) *string {
 
 	values := database.GetCategories()
 
 	if len(values) == 0 {
-		return
+		return nil
 	}
 
 	var categories [][]string
@@ -78,6 +101,13 @@ func ListCategories() {
 		categories = append(categories, model.ToTableFormat())
 	}
 
-	utils.TerminalUIPrintTableModeOnlyView([]string{"id", "title"}, categories)
+	tableKeys := []string{"id", "title"}
+	tableValues := categories
 
+	if selectionMode {
+		return utils.TerminalUIPrintTableSelectionMode(tableKeys, tableValues)
+	} else {
+		utils.TerminalUIPrintTableModeOnlyView(tableKeys, tableValues)
+		return nil
+	}
 }

@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"fineasy/database"
@@ -80,21 +81,26 @@ func InsertCategory() {
 }
 
 func InsertFlow() {
-	utils.TerminalClearScreen()
-	ListCategories()
-	category := selectModel(database.ConvertToModels(database.GetCategories())).(database.Category)
-
-	utils.TerminalClearScreen()
-	ListWallets()
-	wallet := selectModel(database.ConvertToModels(database.GetWallets())).(database.Wallet)
-
-	utils.TerminalClearScreen()
-	ListSources()
-	source := selectModel(database.ConvertToModels(database.GetSources())).(database.Source)
-
 	var answer string
+	utils.TerminalClearScreen()
 
-	// Description
+	// Category selection
+	categorySelected := ListCategories(true)
+	category := selectModel(database.ConvertToModels(database.GetCategories()), *categorySelected).(database.Category)
+
+	utils.TerminalClearScreen()
+
+	// Wallet selection
+	walletSelected := ListWallets(true)
+	wallet := selectModel(database.ConvertToModels(database.GetWallets()), *walletSelected).(database.Wallet)
+
+	utils.TerminalClearScreen()
+
+	// Source selection
+	sourceSelected := ListSources(true)
+	source := selectModel(database.ConvertToModels(database.GetSources()), *sourceSelected).(database.Source)
+
+	// Description typing
 	utils.TerminalClearScreen()
 	reader := bufio.NewReader(os.Stdin)
 	utils.TerminalUIPrintBold("What is the description? ")
@@ -102,7 +108,7 @@ func InsertFlow() {
 
 	description := strings.Split(text, "\n")[0]
 
-	// Cash
+	// Cash typing
 	utils.TerminalClearScreen()
 	var cash float32
 	utils.TerminalUIPrintBold("How much money? ")
@@ -133,15 +139,17 @@ func InsertFlow() {
 	}
 }
 
-func selectModel(list []database.Model) database.Model {
+func selectModel(list []database.Model, stringId string) database.Model {
 
 	var answer string
-	var id uint
+
+	id, err := strconv.ParseUint(stringId, 10, 32)
+	if err != nil {
+		fmt.Println("Error parsing string to uint:", err)
+		return nil
+	}
 
 	for answer != "Y" {
-
-		fmt.Print(utils.MakeBold("What is %s ID? ", list[0].GetTypeInString()))
-		fmt.Scanf("%d", &id)
 
 		var model database.Model
 
@@ -149,7 +157,7 @@ func selectModel(list []database.Model) database.Model {
 
 			model = (list)[i]
 
-			if model.GetID() == id {
+			if model.GetID() == uint(id) {
 				utils.TerminalPrintOnSameLine("Confirm that is %s %s? Type Y (enter) or N: ", model.GetTypeInString(), utils.MakeBold(model.ToString()))
 				fmt.Scanf("%s", &answer)
 				if len(answer) == 0 {

@@ -9,3 +9,13 @@ POSTGRES_DB=fineasydb \\
 # Se já exisitr o container, então:
 docker start fineasy-postgresql
 
+
+# docker exec -it fineasy-postgresql bash
+
+# psql -U gabrielroriz -d fineasydb
+
+# SELECT ARRAY_AGG(ano) AS anos
+# FROM (
+#     SELECT DISTINCT EXTRACT(YEAR FROM created_at) AS ano
+#     FROM flows
+# ) subquery;

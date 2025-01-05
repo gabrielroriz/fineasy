@@ -39,18 +39,18 @@ func main() {
 	}
 
 	// Debug Mode:
-	handlers.ListFlows()
+	// handlers.InsertFlow()
 
-	// command := ""
-	// for command != "\\q" {
-	// 	fmt.Print("\nfineasy> ")
-	// 	fmt.Scanf("%s", &command)
+	command := ""
+	for command != "\\q" {
+		fmt.Print("\nfineasy> ")
+		fmt.Scanf("%s", &command)
 
-	// 	switch command {
-	// 	case "opt":
-	// 		commandOptions()
-	// 	}
-	// }
+		switch command {
+		case "opt":
+			commandOptions()
+		}
+	}
 }
 
 func commandOptions() {
@@ -72,16 +72,16 @@ func commandOptions() {
 
 	// Lists
 	case OptionListFlow:
-		handlers.ListFlows()
+		handlers.ListFlows(false)
 
 	case OptionListCategories:
-		handlers.ListCategories()
+		handlers.ListCategories(false)
 
 	case OptionListWallets:
-		handlers.ListWallets()
+		handlers.ListWallets(false)
 
 	case OptionListSources:
-		handlers.ListSources()
+		handlers.ListSources(false)
 
 	// Insertions
 	case OptionInsertFlow:
